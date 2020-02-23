@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:flutter_dribbble/request.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,10 +26,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<String> startDribbbleAuth() async {
-  return await FlutterWebAuth.authenticate(url: 'http://dribbble.com/oauth/authorize',
-      callbackUrlScheme: 'flutter_dribbble_scheme');
-}
 
 
 class MyHomePage extends StatefulWidget {
