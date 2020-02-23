@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dribbble/web_view_page.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,8 +21,63 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: AuthExplorer(),
+      home: MyHomePage(title : 'home page'),
     );
   }
 }
+
+Future<String> startDribbbleAuth() async {
+  return await FlutterWebAuth.authenticate(url: 'http://dribbble.com/oauth/authorize',
+      callbackUrlScheme: 'flutter_dribbble_scheme');
+}
+
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  Widget buildFutureText(BuildContext context){
+    return Center(
+      child: FutureBuilder<String>(
+        future: startDribbbleAuth(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return Text("Error: ${snapshot.error}");
+            } else {
+              return Text("Contents: ${snapshot.data}");
+            }
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            buildFutureText(context)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
