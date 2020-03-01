@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart' as constants;
 
@@ -43,7 +44,23 @@ getAccessToken(String code) {
   )
       .then((response) {
     log("ResponseBody: ${response.body}");
+    persistAccessToken(parseResponse(response.body));
   });
+}
+
+persistAccessToken(String accessToken) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("access_token", accessToken);
+}
+
+Future<String> queryAccessToken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString("access_token");
+}
+
+String parseResponse(String body) {
+  var parsedJson = json.decode(body);
+  return parsedJson['access_token'];
 }
 
 Map<String, String> getPostHeader() {
