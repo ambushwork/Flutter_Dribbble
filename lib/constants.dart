@@ -20,3 +20,5 @@ final scheme_host = 'ylu';
 final base_api = 'api.dribbble.com';
 
 final endpoint_profile = 'v2/user';
+
+final endpoint_shots = 'v2/user/shots';
