@@ -58,6 +58,14 @@ Future<String> queryAccessToken() async {
   return prefs.getString("access_token");
 }
 
+Future<String> requestUserProfile() async {
+  var map = Map<String, String>();
+  map['access_token'] = await queryAccessToken();
+  http.Response response = await http
+      .get(Uri.https(constants.base_api, constants.endpoint_profile, map));
+  return response.body;
+}
+
 String parseResponse(String body) {
   var parsedJson = json.decode(body);
   return parsedJson['access_token'];

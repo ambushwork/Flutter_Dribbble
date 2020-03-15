@@ -16,3 +16,7 @@ final token_scope = 'oauth/token';
 final client_id_key = 'client_id';
 
 final scheme_host = 'ylu';
+
+final base_api = 'api.dribbble.com';
+
+final endpoint_profile = 'v2/user';

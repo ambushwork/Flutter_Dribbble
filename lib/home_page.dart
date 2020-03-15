@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dribbble/profile.dart';
 import 'package:flutter_dribbble/request.dart';
+import 'package:flutter_dribbble/shots.dart';
 
 import 'authPage.dart';
 
@@ -19,6 +23,7 @@ class HomeState extends State<HomePage> {
     var accessToken = queryAccessToken();
     accessToken.then((token) {
       if (token != null) {
+        log("Access Token: $accessToken");
         setState(() {
           isAuth = true;
         });
@@ -45,17 +50,7 @@ class HomeState extends State<HomePage> {
             tabs: myTabs,
           ),
         ),
-        body: TabBarView(
-          children: myTabs.map((Tab tab) {
-            final String label = tab.text.toLowerCase();
-            return Center(
-              child: Text(
-                'This is the $label tab',
-                style: const TextStyle(fontSize: 36),
-              ),
-            );
-          }).toList(),
-        ),
+        body: TabBarView(children: [ShotPage(), ProfilePage()]),
       ),
     );
   }
