@@ -12,14 +12,11 @@ class ShotPage extends StatefulWidget {
 
 class ShotState extends State<ShotPage> {
   List<Shot> shots;
+  ListView listView;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: <Widget>[Image.network(shots[0]?.images?.normal ?? '')],
-      ),
-    );
+    return Center(child: listView);
   }
 
   @override
@@ -29,8 +26,48 @@ class ShotState extends State<ShotPage> {
     response.then((response) {
       final parsed = jsonDecode(response);
       shots = parsed.map((model) => Shot.fromJson(model)).toList().cast<Shot>();
+      listView = new ListView.builder(
+          itemCount: shots.length,
+          itemBuilder: (context, index) {
+            return new ShotItem(shots[index].id, shots[index].title,
+                shots[index].images, shots[index].description);
+          });
       setState(() {});
     });
+  }
+}
+
+class ShotItem extends StatelessWidget {
+  final String title;
+  final int id;
+  final Images images;
+  final String description;
+
+  ShotItem(
+    this.id,
+    this.title,
+    this.images,
+    this.description,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      verticalDirection: VerticalDirection.down,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        new Text(
+          title,
+          style: TextStyle(fontSize: 26),
+        ),
+        new Text(
+          description ?? '',
+          style: TextStyle(fontSize: 24, color: new Color(0xFF42A5F5)),
+        ),
+        Image.network(images.hidpi)
+      ],
+    );
   }
 }
 
@@ -40,8 +77,15 @@ class Shot {
   final List<String> tags;
   final String title;
   final String published_at;
+  final String description;
 
-  Shot({this.id, this.images, this.tags, this.title, this.published_at});
+  Shot(
+      {this.id,
+      this.images,
+      this.tags,
+      this.title,
+      this.published_at,
+      this.description});
 
   factory Shot.fromJson(Map<String, dynamic> json) {
     return Shot(
@@ -49,7 +93,8 @@ class Shot {
         images: Images.fromJson(json['images']),
         tags: json['tags'].cast<String>(),
         title: json['title'] as String,
-        published_at: json['published_at'] as String);
+        published_at: json['published_at'] as String,
+        description: json['description'] as String);
   }
 }
 
