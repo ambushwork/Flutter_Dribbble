@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dribbble/request.dart';
 
 class ShotPage extends StatefulWidget {
@@ -16,6 +17,9 @@ class ShotState extends State<ShotPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (listView == null) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Center(child: listView);
   }
 

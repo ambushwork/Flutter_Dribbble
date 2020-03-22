@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dribbble/request.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -15,10 +16,13 @@ class ProfileState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (profile == null) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Center(
       child: Column(
         children: <Widget>[
-          Image.network(profile?.avatar_url),
+          Image.network(profile?.avatar_url ?? ''),
           Text(
             'Profile name: ${profile?.name}',
             style: const TextStyle(fontSize: 36),
