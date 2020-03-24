@@ -14,13 +14,14 @@ class ShotPage extends StatefulWidget {
 class ShotState extends State<ShotPage> {
   List<Shot> shots;
   ListView listView;
+  GridView gridView;
 
   @override
   Widget build(BuildContext context) {
-    if (listView == null) {
+    if (gridView == null) {
       return Center(child: CircularProgressIndicator());
     }
-    return Center(child: listView);
+    return Center(child: gridView);
   }
 
   @override
@@ -33,11 +34,57 @@ class ShotState extends State<ShotPage> {
       listView = new ListView.builder(
           itemCount: shots.length,
           itemBuilder: (context, index) {
-            return new ShotItem(shots[index].id, shots[index].title,
-                shots[index].images, shots[index].description);
+            return new GestureDetector(
+              onTap: () => tapEvent(context, shots[index]),
+              child: new ShotItem(shots[index].id, shots[index].title,
+                  shots[index].images, shots[index].description),
+            );
           });
+
+      gridView = new GridView.builder(
+          itemCount: shots.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 6),
+          itemBuilder: (context, index) {
+            return new GestureDetector(
+              onTap: () => tapEvent(context, shots[index]),
+              child: new ShotItem(shots[index].id, shots[index].title,
+                  shots[index].images, shots[index].description),
+            );
+          });
+
       setState(() {});
     });
+  }
+
+  tapEvent(BuildContext context, Shot shot) {
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return ShotDialogView(shot);
+        });
+  }
+}
+
+class ShotDialogView extends StatelessWidget {
+  final Shot shot;
+
+  ShotDialogView(this.shot);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Image.network(shot.images.hidpi),
+          Text(
+            'DONE',
+            style: TextStyle(fontSize: 22),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -61,15 +108,14 @@ class ShotItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
+        ),
         new Text(
           title,
-          style: TextStyle(fontSize: 26),
+          style: TextStyle(fontSize: 18),
         ),
-        new Text(
-          description ?? '',
-          style: TextStyle(fontSize: 24, color: new Color(0xFF42A5F5)),
-        ),
-        Image.network(images.hidpi)
+        Image.network(images.normal)
       ],
     );
   }

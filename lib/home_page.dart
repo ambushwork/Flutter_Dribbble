@@ -46,6 +46,7 @@ class HomeState extends State<HomePage> {
       length: myTabs.length,
       child: Scaffold(
         appBar: AppBar(
+          title: Text("Dribbble"),
           bottom: TabBar(
             tabs: myTabs,
           ),
