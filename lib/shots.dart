@@ -66,24 +66,56 @@ class ShotState extends State<ShotPage> {
   }
 }
 
-class ShotDialogView extends StatelessWidget {
+class ShotDialogView extends SimpleDialog {
   final Shot shot;
 
-  ShotDialogView(this.shot);
+  ShotDialogView(this.shot)
+      : super(title: Text(shot.title), children: [
+          new Container(
+            decoration: new BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: new BorderRadius.all(new Radius.circular(16.0))),
+            child: new Column(
+              children: <Widget>[
+                new Text(shot.title),
+                new Text(
+                  shot.description ?? '',
+                  textAlign: TextAlign.start,
+                ),
+                Image.network(shot.images.hidpi),
+                new TagCollectionView(shot.tags)
+              ],
+            ),
+          )
+        ]);
+}
+
+class TagCollectionView extends StatelessWidget {
+  final List<String> tags;
+
+  TagCollectionView(this.tags);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Image.network(shot.images.hidpi),
-          Text(
-            'DONE',
-            style: TextStyle(fontSize: 22),
-          )
-        ],
-      ),
+    return new Container(
+      child: new Row(
+          children: new List<Widget>.generate(tags.length + 1, (index) {
+        if (index == 0) {
+          return new Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: new Image.asset(
+                "assets/tag.png",
+                height: 24,
+                width: 24,
+              ));
+        } else {
+          return new Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Text(
+                tags[index - 1],
+              ));
+        }
+      })),
     );
   }
 }
