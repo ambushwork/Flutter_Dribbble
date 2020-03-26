@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dribbble/request.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class ShotPage extends StatefulWidget {
   @override
@@ -76,11 +77,18 @@ class ShotDialogView extends SimpleDialog {
                 shape: BoxShape.rectangle,
                 borderRadius: new BorderRadius.all(new Radius.circular(16.0))),
             child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                new Text(shot.title),
-                new Text(
-                  shot.description ?? '',
-                  textAlign: TextAlign.start,
+                new Container(
+                  padding: EdgeInsets.all(16),
+                  child: new Text(
+                    "publish at ${shot.published_at ?? ''}",
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
+                ),
+                new Html(
+                  data: shot.description ?? '',
+                  padding: EdgeInsets.only(left: 16),
                 ),
                 Image.network(shot.images.hidpi),
                 new TagCollectionView(shot.tags)
