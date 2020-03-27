@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dribbble/create_shot.dart';
 
 import 'home_page.dart';
 
@@ -22,7 +23,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      routes: {
+        '/': (context) => HomePage(),
+        '/create_shot': (context) => CreateShotPage()
+      },
+      initialRoute: '/',
     );
   }
 }

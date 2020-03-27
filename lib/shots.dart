@@ -22,7 +22,16 @@ class ShotState extends State<ShotPage> {
     if (gridView == null) {
       return Center(child: CircularProgressIndicator());
     }
-    return Center(child: gridView);
+    return Scaffold(
+      body: Center(child: gridView),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/create_shot');
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.lightBlueAccent,
+      ),
+    );
   }
 
   @override
