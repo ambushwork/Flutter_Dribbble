@@ -1,6 +1,17 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:toast/toast.dart';
 
-class CreateShotPage extends StatelessWidget {
+class CreateShotPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return CreateShotState();
+  }
+}
+
+class CreateShotState extends State<CreateShotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,6 +25,30 @@ class CreateShotPage extends StatelessWidget {
             children: <Widget>[
               MyInputField(
                 inputHint: "Add a title here",
+              ),
+              GestureDetector(
+                onTap: requestPermission,
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  child: DottedBorder(
+                    color: Colors.grey,
+                    strokeWidth: 2,
+                    child: Container(
+                      width: double.infinity,
+                      height: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/ic_upload.png",
+                            height: 36,
+                            width: 36,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
               MyInputField(
                 title: "Description",
@@ -30,7 +65,9 @@ class CreateShotPage extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(16),
                 child: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showToast();
+                  },
                   child: Text("Publish"),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(16))),
@@ -39,6 +76,23 @@ class CreateShotPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  requestPermission() async {
+    var status = await Permission.storage.request();
+    if (status == PermissionStatus.granted) {
+      getImage();
+    }
+  }
+
+  showToast() {
+    Toast.show("onPressed", context,
+        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+  }
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {});
   }
 }
 

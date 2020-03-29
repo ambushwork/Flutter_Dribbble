@@ -22,6 +22,10 @@ dependencies:
   webview_flutter: ^0.3.19+7
   flutter_web_auth: ^0.1.3
   shared_preferences: ^0.5.6+2
+  dotted_border: ^1.0.5
+  permission_handler: ^5.0.0
+  image_picker: ^0.6.4
+  toast: ^0.1.5
   flutter:
     sdk: flutter
 
@@ -43,6 +47,7 @@ flutter:
 
   assets:
     - assets/tag.png
+    - assets/ic_upload.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
