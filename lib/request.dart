@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:http/http.dart' as http;
@@ -72,6 +73,24 @@ Future<String> requestUserShots() async {
   http.Response response = await http
       .get(Uri.https(constants.base_api, constants.endpoint_shots, map));
   return response.body;
+}
+
+Future<bool> uploadUserShot(File file, String title, String description) async {
+  String base64Image = base64Encode(file.readAsBytesSync());
+  String token = await queryAccessToken();
+  var uri = Uri.https(constants.base_api, constants.endpoint_upload_shot, null);
+  http.Response response = await http.post(uri, body: {
+    "image": base64Image,
+    "title": title ?? '',
+    "description": description ?? '',
+    'access_token': token
+  });
+  log("response ${response.statusCode}");
+  if (response.statusCode == 500) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 String parseResponse(String body) {

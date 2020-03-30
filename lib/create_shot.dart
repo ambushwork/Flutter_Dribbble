@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dribbble/request.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:toast/toast.dart';
@@ -12,6 +15,10 @@ class CreateShotPage extends StatefulWidget {
 }
 
 class CreateShotState extends State<CreateShotPage> {
+  File image;
+  String title;
+  String description;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,26 +36,7 @@ class CreateShotState extends State<CreateShotPage> {
               GestureDetector(
                 onTap: requestPermission,
                 child: Container(
-                  padding: EdgeInsets.all(16),
-                  child: DottedBorder(
-                    color: Colors.grey,
-                    strokeWidth: 2,
-                    child: Container(
-                      width: double.infinity,
-                      height: 200,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.asset(
-                            "assets/ic_upload.png",
-                            height: 36,
-                            width: 36,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                    padding: EdgeInsets.all(16), child: showShotImageOrIcon()),
               ),
               MyInputField(
                 title: "Description",
@@ -66,7 +54,9 @@ class CreateShotState extends State<CreateShotPage> {
                 padding: EdgeInsets.all(16),
                 child: FloatingActionButton(
                   onPressed: () {
-                    showToast();
+                    Future<bool> resp =
+                        uploadUserShot(image, title, description);
+                    resp.then((value) => {Navigator.pop(context)});
                   },
                   child: Text("Publish"),
                   shape: RoundedRectangleBorder(
@@ -90,9 +80,41 @@ class CreateShotState extends State<CreateShotPage> {
         duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
   }
 
+  Widget showShotImageOrIcon() {
+    if (image == null) {
+      return DottedBorder(
+        color: Colors.grey,
+        strokeWidth: 2,
+        child: Container(
+          width: double.infinity,
+          height: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                "assets/ic_upload.png",
+                height: 36,
+                width: 36,
+              )
+            ],
+          ),
+        ),
+      );
+    } else {
+      return new Container(
+        width: double.infinity,
+        height: 200,
+        child: Image.file(image),
+      );
+    }
+  }
+
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {});
+
+    setState(() {
+      this.image = image;
+    });
   }
 }
 
